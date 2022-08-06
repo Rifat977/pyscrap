@@ -1,5 +1,6 @@
 import scrapy
 import json
+import pandas as pd
 
 class SunglassSpider(scrapy.Spider):
     name = 'sunglass'
@@ -13,3 +14,7 @@ class SunglassSpider(scrapy.Spider):
         if next_page is not None:
             next_page = response.urljoin(next_page)
             yield scrapy.Request(next_page, callback=self.parse)
+
+        dt = data['plpView']['products']['products']['product']
+        df = pd.DataFrame(dt)
+        df.to_excel('demo.xlsx', index=False)

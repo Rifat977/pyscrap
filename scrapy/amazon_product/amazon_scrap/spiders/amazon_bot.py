@@ -25,6 +25,7 @@ class AmazonBotSpider(scrapy.Spider):
         yield items
 
         next_page = 'https://www.amazon.com/s?i=stripbooks&bbn=283155&rh=n%3A283155%2Cp_n_publication_date%3A1250226011&dc&page=' + str(AmazonBotSpider.page_number) + '&qid=1659088952&rnid=1250225011&ref=sr_pg_' + str(AmazonBotSpider.page_number)
-        if AmazonBotSpider.page_number <= 100:
-            AmazonBotSpider.page_number += 10
+        if AmazonBotSpider.page_number <= 3:
+            AmazonBotSpider.page_number += 1
             yield response.follow(next_page, callback= self.parse)
+

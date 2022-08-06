@@ -1,8 +1,10 @@
 import scrapy
 from ..items import ProjectScrapyItem
 from scrapy.http import FormRequest
+import pandas as pd
+import xlsxwriter
 
-class QuoteSpide(scrapy.Spider):
+class QuoteSpider(scrapy.Spider):
     name = "quotes"
     start_urls = [
         "http://quotes.toscrape.com/login"
@@ -19,7 +21,6 @@ class QuoteSpide(scrapy.Spider):
     
     def start_scrapping(self,response):
         items = ProjectScrapyItem()
-
         data = response.css('div.quote')
         for quotes in data:
             title = quotes.css("span.text::text").extract()
@@ -29,6 +30,7 @@ class QuoteSpide(scrapy.Spider):
             items['title'] = title
             items['author'] = author
             items['tags'] = tags
+
             yield items
 
         next_page = response.css('li.next a::attr(href)').get()
