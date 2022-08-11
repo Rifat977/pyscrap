@@ -1,0 +1,8 @@
+Amazon web scraper
+
+requirement:
+1. Captcha Bypass
+2. 503 Bypass
+
+3. Pagination 
+4. Product name, price, link

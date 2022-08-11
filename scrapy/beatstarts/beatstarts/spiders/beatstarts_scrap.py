@@ -15,7 +15,7 @@ class BeatstartsScrapSpider(scrapy.Spider):
     ]
     
     def start_requests(self):
-        DRIVER_PATH = '/home/rifat/Projects/python/scrap/selen/chromedriver'
+        DRIVER_PATH = '/home/rifat/Projects/python/scrap/scrapy/beatstarts/chromedriver'
         driver = webdriver.Chrome(executable_path=DRIVER_PATH)
         driver.get('https://www.beatstars.com/explore-tracks')
         for i in range(1, 4):
