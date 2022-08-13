@@ -1,0 +1,13 @@
+Installation requirements:
+    Beautifoulsoup
+    >> pip install beautifulsoup4
+    Pandas
+    >> pip isntall pandas
+    Selenium
+    >> pip install selenium
+
+Run scraper:
+    python/python3 main.py search+keyword filename.csv
+    ex: python3 main.py milks data.csv
+
+File generates in export folder.

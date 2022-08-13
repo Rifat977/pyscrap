@@ -24,7 +24,7 @@ class BeatstartsScrapSpider(scrapy.Spider):
             elements = driver.find_elements(By.CSS_SELECTOR, ".fit-parent.ng-star-inserted .ng-star-inserted a")
             for element in elements:
                 profile_link = element.get_attribute('href')
-                yield scrapy.Request(url=profile_link, callback=self.parse_detail)
+                yield scrapy.Request(url=profile_link, callback=self.parse_detail, dont_filter=True)
         driver.quit()
 
     def parse_detail(self, response):
