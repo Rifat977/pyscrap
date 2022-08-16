@@ -6,7 +6,7 @@ url_aj = "http://www.aljazeera.com"
 filepath = "html/aj.html"
 
 class NewsScraper:
-    __url = ''
+    __url = '' 
     __data = ''
     __wlog = None
     __soup = None
