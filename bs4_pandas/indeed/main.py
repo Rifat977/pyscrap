@@ -12,12 +12,6 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36'
 }
 base_url = "http://www.indeed.com"
-url = get_url('Software Engineer', 'Silicon Valley, CA')
-
-response = requests.get(url, headers=headers)
-
-soup = BeautifulSoup(response.text, 'html.parser')
-cards = soup.find_all('div', class_="job_seen_beacon")
 
 def get_record(card):
     job_title = card.h2.a.span
@@ -43,12 +37,22 @@ def get_record(card):
     record = (job_title, job_url, company_name, company_location, job_summury, post_date, salary)
     return record
 
+def main(position, location):
+    records = []
 
-records = []
+    url = get_url(position, location)
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    cards = soup.find_all('div', class_="job_seen_beacon")
+    for card in cards:
+        record = get_record(card)
+        records.append(record)
 
-for card in cards:
-    record = get_record(card)
-    records.append(record)
-    print(record)
+    with open('results.csv', 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(['JobTitle', 'Company', 'Location', 'PostDate', 'Summury', 'Salary', 'JobUrl'])
+        writer.writerows(records)
 
+
+main('Software Engineer', 'USA')
 
