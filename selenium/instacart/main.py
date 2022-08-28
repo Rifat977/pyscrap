@@ -6,6 +6,7 @@ import pandas as pd
 
 import sys
 import os
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
@@ -14,9 +15,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 cwd = os.getcwd()
-DRIVER_PATH = cwd+'/chromedriver'
+DRIVER_PATH = cwd+'\chromedriver.exe'
 chrome_options = Options()
-chrome_options.add_argument('--headless')
+chrome_options.add_argument('--head')
 webdriver = webdriver.Chrome(executable_path=DRIVER_PATH, options=chrome_options)
 
 base_url = "https://www.instacart.com"
@@ -31,7 +32,10 @@ records = []
 
 def product_extract(item):
     driver.get(item)
-    wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'css-1u4ofbf')))
+    try:
+        wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'css-1u4ofbf')))
+    except:
+        print('waiting failed')
     html   = BeautifulSoup(driver.page_source, "html.parser")
     shopName = html.find('h2', class_="css-auh5rw-Header").text
     try:
@@ -89,14 +93,12 @@ def product_extract(item):
             ingredients = detail.div.text
         if(detail.h2.text.strip()=='Details'):
             details = detail.div.text
-            # if(detail.h2.text.strip()=='Directions'):
-                # directions = detail.dev.text
     try:
-        nutration = html.find('div', class_="css-1jjp3po-NutritionalFacts").get_text(' | ')
+        nutration = html.find('div', class_="css-1jjp3po-NutritionalFacts").get_text(' , ')
     except:
         nutration = 'N/A'
 
-    productLink = base_url+item
+    productLink = item
     result = {
         'shopName' : shopName,
         'productName':productName,
@@ -108,16 +110,17 @@ def product_extract(item):
         'available':available,
         'details':details,
         'ingredients':ingredients,
-        # 'directions' : directions,
         'productLink':productLink, 
         'image':image,
         'nutration' : nutration,
-        'photos':photos
+        'photos':photos,
+        'search_key': search_query,
+        'retrive_date': datetime.now()
     }
     records.append(result)
     data = pd.DataFrame(records)
-    directory = 'export/'
-    data.to_csv(directory+filename, index=False)
+    directory = 'export/'+filename
+    data.to_csv(directory, index=False)
     print('Data saving..')
 
 
@@ -150,5 +153,3 @@ with webdriver as driver:
     wait = WebDriverWait(driver, 20)
     search_product(base_url)
     driver.close()    
-
-
